@@ -1,21 +1,23 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
+import { ButtonAdapter } from "../Adapter/ButtonAdapter";
+import { IconAdapter } from "../Adapter/IconAdapter";
 
-export class ProductsPage{
-    readonly page : Page;
-    addToCartButton : Locator;
-    readonly removeButton : Locator;
-    readonly shoppingCartIcon : Locator;
+export async function addItemToCart(page: Page, lable: string) {
 
-    constructor(page : Page){
-        this.page = page;
-        this.addToCartButton = this.page.getByRole('button',{name : "Add to cart"} );
-        this.removeButton = this.page.getByRole('button',{name : "Remove"} );
-        this.shoppingCartIcon = this.page.getByRole('link',{name : "shopping-cart-link"} );
-    }
-    
-    async addItemToCart(item: string){
+    const addToCartButton = new ButtonAdapter(page, "Add to cart", lable);
 
-        this.addToCartButton = this.page.locator(".inventory_item:has-text('" + item + "')").getByRole('button', {name : "Add to cart"});
-        await this.addToCartButton.click();
-    }  
+    await addToCartButton.clickBut();
 }
+
+export async function removeItemFromCart(page: Page, lable: string) {
+
+    const removeButton = new ButtonAdapter(page, "Remove", lable);
+
+    await removeButton.clickBut();
+}
+
+export async function isButtonVisible(page: Page, name: string, lable: string) {
+    const button = new ButtonAdapter(page, name, lable);
+
+    return button.buttonIsVisible();
+} 
