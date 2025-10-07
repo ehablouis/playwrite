@@ -1,23 +1,31 @@
-import { Page, expect } from "@playwright/test";
 import { ButtonAdapter } from "../Adapter/ButtonAdapter";
-import { IconAdapter } from "../Adapter/IconAdapter";
 
-export async function addItemToCart(page: Page, lable: string) {
+import { BasePage } from "./BasicPage";
 
-    const addToCartButton = new ButtonAdapter(page, "Add to cart", lable);
+export class ProductsPage extends BasePage{
 
-    await addToCartButton.clickBut();
+    async addItemToCart(label: string) {
+        //await this.page.waitForTimeout(5000);
+        const addToCartButton = new ButtonAdapter(this.page, "Add to cart", label);
+        const removeButton = new ButtonAdapter(this.page, "Remove", label);
+
+        await this.basePageClick(addToCartButton.locator)
+
+        await this.basePageExpectNotVisible(addToCartButton.locator)
+        await this.basePageExpectVisible(removeButton.locator)
+    }
+
+    async removeItemFromCart(label: string) {
+        const addToCartButton = new ButtonAdapter(this.page, "Add to cart", label);
+        const removeButton = new ButtonAdapter(this.page, "Remove", label);
+
+        await this.basePageClick(removeButton.locator)
+
+        await this.basePageExpectVisible(addToCartButton.locator)
+        await this.basePageExpectNotVisible(removeButton.locator)
+    }
+
+    async closePage() {
+        this.basePageClosePage();
+    }
 }
-
-export async function removeItemFromCart(page: Page, lable: string) {
-
-    const removeButton = new ButtonAdapter(page, "Remove", lable);
-
-    await removeButton.clickBut();
-}
-
-export async function isButtonVisible(page: Page, name: string, lable: string) {
-    const button = new ButtonAdapter(page, name, lable);
-
-    return button.buttonIsVisible();
-} 

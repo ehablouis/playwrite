@@ -1,48 +1,31 @@
 import { test, expect } from '@playwright/test';
-import { openApplication, login, closeAppplication } from '../pages/LoginPage';
-import { addItemToCart, removeItemFromCart, isButtonVisible } from '../pages/ProductsPage';
+import ManagePage from '../pages/ManagePage';
 
-test('Login to Website"', async ({ page }) => {
+test.describe('Shopping Cart Tests', () => {
+    let mp: ManagePage;
 
-    await openApplication(page)
-    await login(page, "standard_user", "secret_sauce")
-    await closeAppplication(page)
-});
+    test.beforeEach(async ({ page }) => {
+        mp = new ManagePage(page);
+        await mp.loginPage.openLoginPage();
+        await mp.loginPage.userLogin("standard_user", "secret_sauce");
+    });
 
-test("Add Items to shopping cart", async ({ page }) => {
+    test.afterEach(async () => {
+        await mp.productsPage.closePage();
+    });
 
-    await openApplication(page)
-    await login(page, "standard_user", "secret_sauce")
+    test("Add Items to shopping cart", async () => {
 
-    await addItemToCart(page, "Sauce Labs Backpack")
-    await addItemToCart(page, "Sauce Labs Fleece Jacket");
+        await mp.productsPage.addItemToCart("Sauce Labs Backpack")
+        await mp.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
+    });
 
-    expect(await isButtonVisible(page, "Add to cart", "Sauce Labs Backpack")).toBeFalsy()
-    expect(await isButtonVisible(page, "Add to cart", "Sauce Labs Fleece Jacket")).toBeFalsy()
+    test("Remove Items from shopping cart", async () => {
 
-    expect(await isButtonVisible(page, "Remove", "Sauce Labs Backpack")).toBeTruthy()
-    expect(await isButtonVisible(page, "Remove", "Sauce Labs Fleece Jacket")).toBeTruthy()
+        await mp.productsPage.addItemToCart("Sauce Labs Backpack")
+        await mp.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
 
-    await closeAppplication(page)
-});
-
-test("Remove Items from shopping cart", async ({ page }) => {
-
-    await openApplication(page)
-    await login(page, "standard_user", "secret_sauce")
-
-    await addItemToCart(page, "Sauce Labs Backpack")
-    await addItemToCart(page, "Sauce Labs Fleece Jacket");
-
-    expect(await isButtonVisible(page, "Add to cart", "Sauce Labs Backpack")).toBeFalsy()
-    expect(await isButtonVisible(page, "Add to cart", "Sauce Labs Fleece Jacket")).toBeFalsy()
-
-    expect(await isButtonVisible(page, "Remove", "Sauce Labs Backpack")).toBeTruthy()
-    expect(await isButtonVisible(page, "Remove", "Sauce Labs Fleece Jacket")).toBeTruthy()
-
-    await removeItemFromCart(page, "Sauce Labs Backpack");
-    expect(await isButtonVisible(page, "Add to cart", "Sauce Labs Backpack")).toBeTruthy()
-    expect(await isButtonVisible(page, "Remove", "Sauce Labs Backpack")).toBeFalsy()
-
-    await closeAppplication(page)
+        await mp.productsPage.removeItemFromCart("Sauce Labs Backpack");
+        await mp.productsPage.removeItemFromCart("Sauce Labs Fleece Jacket");
+    });
 });

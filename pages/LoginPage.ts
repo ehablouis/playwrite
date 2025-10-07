@@ -1,34 +1,33 @@
-import { Page, expect } from "@playwright/test";
+import { BasePage } from "./BasicPage";
 import { ButtonAdapter } from "../Adapter/ButtonAdapter";
 import { IconAdapter } from "../Adapter/IconAdapter";
 import { TextBoxAdapter } from "../Adapter/TextBoxAdapter";
 
 
-export async function openApplication(page: Page) {
+export class LoginPage extends BasePage {
+    async openLoginPage() {
+        await this.goToUrl('/');
+        await this.basePageExpectTitel('Swag Labs');
+        console.log("Login page opened!");
+    }
 
-    await page.goto('https://www.saucedemo.com/');
-    await expect(page).toHaveTitle('Swag Labs');
-    console.log("The website is opened!");
-}
 
-export async function login(page: Page, username: string, password: string) {
+    async userLogin(username: string, password: string) {
+        const usernameTextBox = new TextBoxAdapter(this.page, "Username");
+        await this.basePageFill(usernameTextBox.locator, username);
 
-    const usernameTextBox = new TextBoxAdapter(page, "Username");
-    await usernameTextBox.setValue(username)
-    expect(await usernameTextBox.getValue()).toEqual(username)
+        const passwordTextBox = new TextBoxAdapter(this.page, "Password");
+        await this.basePageFill(passwordTextBox.locator, password);
 
-    const passwordTextBox = new TextBoxAdapter(page, "Password");
-    await passwordTextBox.setValue(password)
+        const loginButton = new ButtonAdapter(this.page, "Login");
+        this.basePageClick(loginButton.locator)
+        
+        const shoppingCartIcon = new IconAdapter(this.page, "shopping-cart-link");
 
-    const loginButton = new ButtonAdapter(page, "Login");
-    await loginButton.clickBut()
+        await this.basePageExpectVisible(shoppingCartIcon.locator);
+    }
 
-    const shoppingCartIcon = new IconAdapter(page, "shopping-cart-link");
-
-    expect(await shoppingCartIcon.iconIsVisible()).toBeTruthy();
-
-}
-
-export async function closeAppplication(page: Page) {
-    page.close();
+    async closePage() {
+        this.basePageClosePage();
+    }
 }
