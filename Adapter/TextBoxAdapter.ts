@@ -10,11 +10,7 @@ export class TextBoxAdapter {
             .or(page.getByPlaceholder(name));
     }
 
-    public async getValue(): Promise<string> {
-        return await this.textBoxLoc.inputValue();
-    }
-
-    public async setValue(value: string) {
-        await this.textBoxLoc.fill(value)
+    public get locator(): Locator {
+        return this.textBoxLoc;
     }
 } 

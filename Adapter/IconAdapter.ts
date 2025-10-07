@@ -8,12 +8,8 @@ export class IconAdapter {
         this.page = page;
         this.iconLoc = page.locator(`a[data-test="${name}"]`);
     }
-
-    public async clickOnIcon() {
-        await this.iconLoc.click()
-    }
-
-    public async iconIsVisible() {
-        return await this.iconLoc.isVisible()
+    
+    public get locator(): Locator {
+        return this.iconLoc;
     }
 } 
