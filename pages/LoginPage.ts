@@ -12,7 +12,7 @@ export class LoginPage extends BasePage {
     }
 
 
-    async userLogin(username: string, password: string) {
+    async userLogin(username: string, password: string, validate: boolean = true) {
         const usernameTextBox = new TextBoxAdapter(this.page, "Username");
         await this.basePageFill(usernameTextBox.locator, username);
 
@@ -21,10 +21,17 @@ export class LoginPage extends BasePage {
 
         const loginButton = new ButtonAdapter(this.page, "Login");
         this.basePageClick(loginButton.locator)
-        
-        const shoppingCartIcon = new IconAdapter(this.page, "shopping-cart-link");
 
-        await this.basePageExpectVisible(shoppingCartIcon.locator);
+        if (validate) {
+            const shoppingCartIcon = new IconAdapter(this.page, "shopping-cart-link");
+            await this.basePageExpectVisible(shoppingCartIcon.locator);
+        }
+    }
+
+    async hasErrorMessage(value: string) {
+        const errorMessage = this.page.locator('[data-test="error"]');
+        await this.basePageExpectVisible(errorMessage);
+        await this.containsValue(await errorMessage.textContent() || "", value);
     }
 
     async closePage() {
