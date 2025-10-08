@@ -1,0 +1,17 @@
+Possible tests for validUsers.json (user credentials data):
+
+1. Verify all user objects contain both 'username' and 'password' fields.
+2. Ensure all passwords match the expected value ('secret_sauce').
+3. Test login functionality for each user type (standard, locked_out, problem, performance_glitch, error, visual).
+4. Validate that locked_out_user cannot log in and receives the correct error message.
+5. Check that standard_user can log in and access the main page.
+6. Confirm that error_user triggers the expected error scenario in the application.
+7. Test UI for visual_user to ensure no display issues occur after login.
+8. Measure login performance for performance_glitch_user.
+9. Ensure problem_user exposes known application issues.
+
+These tests cover data validation, authentication, and user-specific scenarios for the credentials in validUsers.json.
+
+
+in this playwright implementation with pom and fixture can you create a separate spec fileand test number 4 senario that you created
+can you use mcp server playwright to analyze this page?

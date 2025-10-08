@@ -63,6 +63,14 @@ export abstract class BasePage {
     }
 
     /**
+     * Checks if a string contains another string.
+     * @param value - The string to search in
+     * @param search - The string to search for
+     */
+    protected async containsValue(value: string, search: string) {
+        await expect(value).toContain(search);
+    }
+    /**
      * Closes the current page.
      */
     protected async basePageClosePage() {
