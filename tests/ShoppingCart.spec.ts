@@ -1,31 +1,28 @@
-import { test, expect } from '@playwright/test';
-import ManagePage from '../pages/ManagePage';
+import { test, expect } from '../fixtures/pom.fixture';
 
 test.describe('Shopping Cart Tests', () => {
-    let mp: ManagePage;
 
-    test.beforeEach(async ({ page }) => {
-        mp = new ManagePage(page);
-        await mp.loginPage.openLoginPage();
-        await mp.loginPage.userLogin("standard_user", "secret_sauce");
+    test.beforeEach(async ({ pm, users}) => {
+        await pm.loginPage.openLoginPage();
+        await pm.loginPage.userLogin(users.standard_user.username, users.standard_user.password);
     });
 
-    test.afterEach(async () => {
-        await mp.productsPage.closePage();
+    test.afterEach(async ( { pm } ) => {
+        await pm.productsPage.closePage();
     });
 
-    test("Add Items to shopping cart", async () => {
+    test("Add Items to shopping cart", async ({ pm } ) => {
 
-        await mp.productsPage.addItemToCart("Sauce Labs Backpack")
-        await mp.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
+        await pm.productsPage.addItemToCart("Sauce Labs Backpack")
+        await pm.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
     });
 
-    test("Remove Items from shopping cart", async () => {
+    test("Remove Items from shopping cart", async ({ pm } ) => {
 
-        await mp.productsPage.addItemToCart("Sauce Labs Backpack")
-        await mp.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
+        await pm.productsPage.addItemToCart("Sauce Labs Backpack")
+        await pm.productsPage.addItemToCart("Sauce Labs Fleece Jacket");
 
-        await mp.productsPage.removeItemFromCart("Sauce Labs Backpack");
-        await mp.productsPage.removeItemFromCart("Sauce Labs Fleece Jacket");
+        await pm.productsPage.removeItemFromCart("Sauce Labs Backpack");
+        await pm.productsPage.removeItemFromCart("Sauce Labs Fleece Jacket");
     });
 });
